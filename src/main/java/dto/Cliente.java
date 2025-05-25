@@ -35,6 +35,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Cliente.findByNombClie", query = "SELECT c FROM Cliente c WHERE c.nombClie = :nombClie"),
     @NamedQuery(name = "Cliente.findByFechNaciClie", query = "SELECT c FROM Cliente c WHERE c.fechNaciClie = :fechNaciClie"),
     @NamedQuery(name = "Cliente.findByLogiClie", query = "SELECT c FROM Cliente c WHERE c.logiClie = :logiClie"),
+    @NamedQuery(name = "Cliente.validar", query = "SELECT c FROM Cliente c WHERE c.codiClie = :codiClie and c.passClie = :passClie"),
     @NamedQuery(name = "Cliente.findByPassClie", query = "SELECT c FROM Cliente c WHERE c.passClie = :passClie")})
 public class Cliente implements Serializable {
 
@@ -98,6 +99,10 @@ public class Cliente implements Serializable {
         this.passClie = passClie;
     }
 
+    public Cliente(Integer codiClie, String passClie) {
+        this.codiClie = codiClie;
+        this.passClie = passClie;
+    }
     public Integer getCodiClie() {
         return codiClie;
     }

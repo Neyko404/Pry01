@@ -134,5 +134,18 @@ public class ClienteJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public boolean validar(int codiClie, String passClie) {
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createNamedQuery("Cliente.validar");
+            q.setParameter("codiClie", codiClie);
+            q.setParameter("passClie", passClie);
+            List<Cliente> lista = q.getResultList();
+            return !lista.isEmpty();
+        } finally {
+            em.close();
+        }
+    }
+
 }

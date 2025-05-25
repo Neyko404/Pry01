@@ -1,12 +1,236 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset='utf-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <title>AdminLTE v4</title>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-</head>
-<body>
-  <script>window.location.href = './dist/pages/index.html'</script>
-</body>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Life For Sky - Login</title>
+
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+        <style>
+            *, ::after, ::before {
+                box-sizing: border-box;
+            }
+
+            body {
+                background-color: #212121;
+                color: #fff;
+                font-family: monospace, serif;
+                letter-spacing: 0.05em;
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .form {
+                width: 400px;
+                padding: 30px 15px 22px;
+                margin: 0 auto;
+                background: #2a2a2a;
+                border-radius: 12px;
+                box-shadow: 0 0 20px rgba(0,212,255,0.5);
+                text-align: center;
+            }
+
+            h2 {
+                margin-bottom: 30px;
+                font-weight: 700;
+                font-size: 28px;
+                color: #00d4ff;
+                letter-spacing: 0.1em;
+            }
+
+            .control {
+                margin-bottom: 24px;
+                text-align: left;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 6px;
+                font-weight: 600;
+                font-size: 14px;
+                color: #00d4ff;
+                letter-spacing: 0.07em;
+            }
+
+            input {
+                width: 100%;
+                padding: 14px 16px;
+                border: 0;
+                background: transparent;
+                color: #fff;
+                font-family: monospace, serif;
+                letter-spacing: 0.05em;
+                font-size: 16px;
+                border-radius: 6px;
+                border: 1.5px solid rgba(0,212,255,0.6);
+                transition: background 0.3s ease, border-color 0.3s ease;
+            }
+
+            input:hover,
+            input:focus {
+                outline: none;
+                background: rgba(0,212,255,0.15);
+                border-color: #00d4ff;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 14px 16px;
+                background: transparent;
+                border: 1.5px solid rgba(0,212,255,1);
+                color: #fff;
+                letter-spacing: 0.1em;
+                font-weight: bold;
+                font-family: monospace;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 6px;
+                transition: background 0.3s ease;
+            }
+
+            .btn:hover {
+                background: rgba(0,212,255,0.8);
+            }
+
+            .separator {
+                margin: 30px 0 18px;
+                font-size: 14px;
+                color: #ccc;
+                position: relative;
+                font-weight: 600;
+                letter-spacing: 0.1em;
+            }
+
+            .separator::before,
+            .separator::after {
+                content: "";
+                height: 1px;
+                background: #00d4ff;
+                position: absolute;
+                top: 50%;
+                width: 35%;
+                opacity: 0.4;
+            }
+
+            .separator::before {
+                left: 0;
+            }
+
+            .separator::after {
+                right: 0;
+            }
+
+            /* Google button container fix */
+            .g_id_signin {
+                display: flex !important;
+                justify-content: center !important;
+                margin-bottom: 10px;
+            }
+
+            .register-text {
+                margin-top: 20px;
+                font-size: 14px;
+                color: #00d4ff;
+                letter-spacing: 0.07em;
+            }
+
+            .register-text a {
+                color: #00d4ff;
+                font-weight: 700;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .register-text a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="form">
+            <h2>INICIO DE SESIÓN 🌍</h2>
+
+            <form onsubmit="return false;">
+                <div class="control">
+                    <label for="user">Usuario</label>
+                    <input type="text" id="user" autocomplete="username" required />
+                </div>
+
+                <div class="control">
+                    <label for="pass">Contraseña</label>
+                    <input type="password" id="pass" autocomplete="current-password" required />
+                </div>
+
+                <button id="btnIniciar" class="btn">Iniciar</button>
+            </form>
+
+            <div class="separator">O inicia sesión con</div>
+
+            <div id="g_id_onload"
+                 data-client_id="332844715861-m6754d87dt29ufhbn9hmaeuc22ntlca6.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false">
+            </div>
+
+            <div class="g_id_signin" data-type="standard"></div>
+
+        </div>
+
+        <script>
+            let btnIniciar = document.getElementById("btnIniciar");
+            btnIniciar.addEventListener("click", function () {
+                let user = document.getElementById("user").value;
+                let pass = document.getElementById("pass").value;
+
+                let url = `logueocliente?user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`;
+
+                fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.resultado === "ok") {
+                                setCookie("token", data.token, 7);
+                                window.location.href = './dist/pages/index.html';
+                            } else {
+                                alert("Usuario o contraseña incorrectos");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error al procesar la solicitud:", error);
+                        });
+            });
+
+            function handleCredentialResponse(response) {
+                const id_token = response.credential;
+
+                fetch(`logueogoogle`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({id_token})
+                })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.resultado === 'ok') {
+                                setCookie("token", data.token, 7);
+                                window.location.href = './dist/pages/index.html';
+                            } else {
+                                alert('Error en login con Google');
+                            }
+                        })
+                        .catch(err => console.error(err));
+            }
+
+            function setCookie(nombre, valor, dias) {
+                const fecha = new Date();
+                fecha.setTime(fecha.getTime() + (dias * 24 * 60 * 60 * 1000));
+                const expira = "expires=" + fecha.toUTCString();
+                document.cookie = nombre + "=" + valor + ";" + expira + ";path=/";
+            }
+        </script>
+    </body>
 </html>
