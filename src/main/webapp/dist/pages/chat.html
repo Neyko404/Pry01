@@ -224,7 +224,8 @@
                                     class="user-image rounded-circle shadow"
                                     alt="User Image"
                                     />
-                                <span class="d-none d-md-inline">Alexander Pierce</span>
+                                <!--Cambiamos esto-->
+                                <span id="usuarioNombre" class="d-none d-md-inline">Cargando...</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <!--begin::User Image-->
@@ -234,32 +235,22 @@
                                         class="rounded-circle shadow"
                                         alt="User Image"
                                         />
-                                    <p>
-                                        Alexander Pierce - Web Developer
-                                        <small>Member since Nov. 2023</small>
-                                    </p>
+                                    <p id="usuarioNombreDetalle">Cargando...</p>
                                 </li>
                                 <!--end::User Image-->
                                 <!--begin::Menu Body-->
-                                <li class="user-body">
-                                    <!--begin::Row-->
-                                    <div class="row">
-                                        <div class="col-4 text-center"><a href="#">Followers</a></div>
-                                        <div class="col-4 text-center"><a href="#">Sales</a></div>
-                                        <div class="col-4 text-center"><a href="#">Friends</a></div>
-                                    </div>
-                                    <!--end::Row-->
-                                </li>
+
                                 <!--end::Menu Body-->
                                 <!--begin::Menu Footer-->
-                                <li class="user-footer">
-                                    <a href="#" class="btn btn-default btn-flat">Profile</a>
-                                    <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+                                <li class="user-footer d-flex justify-content-between px-3 pb-2">
+                                    <a href="cambiarClave.html" class="btn btn-default btn-flat">Cambiar Clave</a>
+                                    <a href="#" id="logoutBtn" class="btn btn-default btn-flat">Cerrar sesion</a>
                                 </li>
+                                <!--hasta aca cambiamos-->
                                 <!--end::Menu Footer-->
                             </ul>
                         </li>
-                        <!--end::User Menu Dropdown-->
+                        <!--end::User Menu Dropdown-->
                     </ul>
                     <!--end::End Navbar Links-->
                 </div>
@@ -745,7 +736,7 @@
                     <button id="sendBtn">Enviar</button>
 
                     <script>
-                    // Helper para leer cookie
+                        // Helper para leer cookie
                         function getCookie(name) {
                             const value = `; ${document.cookie}`;
                             const parts = value.split(`; ${name}=`);
@@ -754,20 +745,20 @@
                             return null;
                         }
 
-                    // Variables globales
+                        // Variables globales
                         let socket;
                         let aesKey = null; // Clave AES en formato CryptoKey
                         const chatDiv = document.getElementById("chat");
                         const messageInput = document.getElementById("message");
                         const sendBtn = document.getElementById("sendBtn");
 
-                    // Deshabilitar botón hasta que la clave esté lista
+                        // Deshabilitar botón hasta que la clave esté lista
                         sendBtn.disabled = true;
 
-                    // Vector de inicialización fijo para AES-CBC (demo, no recomendado en producción)
+                        // Vector de inicialización fijo para AES-CBC (demo, no recomendado en producción)
                         const iv = new Uint8Array(16); // 16 bytes de ceros (igual que backend)
 
-                    // Inicializar conexión y clave AES
+                        // Inicializar conexión y clave AES
                         (async function init() {
                             const token = getCookie("token");
                             if (!token) {
@@ -814,7 +805,7 @@
                             socket.onclose = () => appendMessage("Sistema", "Conexión cerrada");
                         })();
 
-                    // Enviar mensaje cifrado con JSON
+                        // Enviar mensaje cifrado con JSON
                         sendBtn.onclick = async () => {
                             if (!aesKey) {
                                 return alert("Clave AES no lista");
@@ -841,7 +832,7 @@
                             messageInput.value = "";
                         };
 
-                    // Funciones de cifrado/descifrado AES-CBC usando Web Crypto API
+                        // Funciones de cifrado/descifrado AES-CBC usando Web Crypto API
                         async function encryptMessage(text) {
                             const encoded = new TextEncoder().encode(text);
                             const cipherBuffer = await window.crypto.subtle.encrypt(
@@ -867,13 +858,73 @@
                             return new TextDecoder().decode(plainBuffer);
                         }
 
-                    // Mostrar mensajes en pantalla
+                        // Mostrar mensajes en pantalla
                         function appendMessage(user, msg) {
                             const p = document.createElement("p");
                             p.textContent = `${user}: ${msg}`;
                             chatDiv.appendChild(p);
                             chatDiv.scrollTop = chatDiv.scrollHeight;
                         }
+                        //Esto es para que llame el logi del cliente
+                        function parseJwt(token) {
+                            try {
+                                const base64Url = token.split('.')[1];
+                                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                                const jsonPayload = decodeURIComponent(
+                                        atob(base64).split('').map(c =>
+                                    '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+                                ).join('')
+                                        );
+                                return JSON.parse(jsonPayload);
+                            } catch (e) {
+                                return null;
+                            }
+                        }
+
+                        document.addEventListener("DOMContentLoaded", () => {
+                            const token = getCookie("token");
+                            console.log("Token obtenido de cookie:", token); // Debug
+
+                            if (!token) {
+                                console.warn("No se encontrÃ³ token en cookie");
+                                return;
+                            }
+
+                            const datos = parseJwt(token);
+                            console.log("Datos decodificados del token:", datos); // Debug
+
+                            if (datos && datos.sub) {
+                                fetch(`/Pry01/infocliente?codiClie=${datos.sub}`)
+                                        .then(res => {
+                                            if (!res.ok) {
+                                                throw new Error(`HTTP error! status: ${res.status}`);
+                                            }
+                                            return res.json();
+                                        })
+                                        .then(cliente => {
+                                            console.log("Respuesta cliente:", cliente); // Debug
+                                            document.getElementById("usuarioNombre").textContent = `${cliente.logiClie}`;
+                                            document.getElementById("usuarioNombreDetalle").textContent = cliente.logiClie;
+                                        })
+                                        .catch(err => {
+                                            console.error("Error al obtener cliente:", err);
+                                            document.getElementById("usuarioNombre").textContent = "Error al cargar usuario";
+                                            document.getElementById("usuarioNombreDetalle").textContent = "Error al cargar usuario";
+                                        });
+                            } else {
+                                console.warn("Token invÃ¡lido o sin 'sub'");
+                            }
+                        });
+                        //script cerrar sesion:
+                        document.getElementById("logoutBtn").addEventListener("click", function (e) {
+                            e.preventDefault(); // Evita que el enlace recargue la página
+
+                            // Borrar la cookie 'token'
+                            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                            // Redirigir a la página de login
+                            window.location.href = "../../index.html"; // Cambia esto si tu login tiene otro nombre
+                        });
                     </script>
                     <div class="container-fluid">
                         <!-- Info boxes -->
@@ -951,24 +1002,24 @@
         <script src="../../dist/js/adminlte.js"></script>
         <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
         <script>
-    const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-    const Default = {
-        scrollbarTheme: 'os-theme-light',
-        scrollbarAutoHide: 'leave',
-        scrollbarClickScroll: true,
-    };
-    document.addEventListener('DOMContentLoaded', function () {
-        const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-        if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-            OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-                scrollbars: {
-                    theme: Default.scrollbarTheme,
-                    autoHide: Default.scrollbarAutoHide,
-                    clickScroll: Default.scrollbarClickScroll,
-                },
-            });
-        }
-    });
+                        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+                        const Default = {
+                            scrollbarTheme: 'os-theme-light',
+                            scrollbarAutoHide: 'leave',
+                            scrollbarClickScroll: true,
+                        };
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+                            if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
+                                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+                                    scrollbars: {
+                                        theme: Default.scrollbarTheme,
+                                        autoHide: Default.scrollbarAutoHide,
+                                        clickScroll: Default.scrollbarClickScroll,
+                                    },
+                                });
+                            }
+                        });
         </script>
         <!--end::OverlayScrollbars Configure-->
         <!-- OPTIONAL SCRIPTS -->
