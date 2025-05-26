@@ -221,7 +221,8 @@
                                     class="user-image rounded-circle shadow"
                                     alt="User Image"
                                     />
-                                <span class="d-none d-md-inline">Alexander Pierce</span>
+                                <!--Cambiamos esto-->
+                                <span id="usuarioNombre" class="d-none d-md-inline">Cargando...</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <!--begin::User Image-->
@@ -231,19 +232,18 @@
                                         class="rounded-circle shadow"
                                         alt="User Image"
                                         />
-                                    <p>
-                                        Alexander Pierce
-                                    </p>
+                                    <p id="usuarioNombreDetalle">Cargando...</p>
                                 </li>
                                 <!--end::User Image-->
                                 <!--begin::Menu Body-->
-                                
+
                                 <!--end::Menu Body-->
                                 <!--begin::Menu Footer-->
                                 <li class="user-footer d-flex justify-content-between px-3 pb-2">
                                     <a href="cambiarClave.html" class="btn btn-default btn-flat">Cambiar Clave</a>
-                                    <a href="#" id="logoutBtn" class="btn btn-default btn-flat">Cerrar sesiÃ³n</a>
+                                    <a href="#" id="logoutBtn" class="btn btn-default btn-flat">Cerrar sesion</a>
                                 </li>
+                                <!--hasta aca cambiamos-->
                                 <!--end::Menu Footer-->
                             </ul>
                         </li>
@@ -1089,6 +1089,57 @@
                 }
                 return null;
             }
+
+            //Esto es para que llame el logi del cliente
+            function parseJwt(token) {
+                try {
+                    const base64Url = token.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(
+                            atob(base64).split('').map(c =>
+                        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+                    ).join('')
+                            );
+                    return JSON.parse(jsonPayload);
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                const token = getCookie("token");
+                console.log("Token obtenido de cookie:", token); // Debug
+
+                if (!token) {
+                    console.warn("No se encontró token en cookie");
+                    return;
+                }
+
+                const datos = parseJwt(token);
+                console.log("Datos decodificados del token:", datos); // Debug
+
+                if (datos && datos.sub) {
+                    fetch(`/Pry01/infocliente?codiClie=${datos.sub}`)
+                            .then(res => {
+                                if (!res.ok) {
+                                    throw new Error(`HTTP error! status: ${res.status}`);
+                                }
+                                return res.json();
+                            })
+                            .then(cliente => {
+                                console.log("Respuesta cliente:", cliente); // Debug
+                                document.getElementById("usuarioNombre").textContent = `${cliente.logiClie}`;
+                                document.getElementById("usuarioNombreDetalle").textContent = cliente.logiClie;
+                            })
+                            .catch(err => {
+                                console.error("Error al obtener cliente:", err);
+                                document.getElementById("usuarioNombre").textContent = "Error al cargar usuario";
+                                document.getElementById("usuarioNombreDetalle").textContent = "Error al cargar usuario";
+                            });
+                } else {
+                    console.warn("Token inválido o sin 'sub'");
+                }
+            });
         </script>
         <!--end::Script-->
     </body>
