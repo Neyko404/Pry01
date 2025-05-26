@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Life For Sky - Login</title>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
         <script src="https://accounts.google.com/gsi/client" async defer></script>
 
         <style>
@@ -184,13 +184,28 @@
         </div>
 
         <script>
+            // Función para cifrar usando AES
+            function cifrar(message, key) {
+                var keyHex = CryptoJS.enc.Utf8.parse(key);  // Convertir la clave en formato UTF-8
+                var encrypted = CryptoJS.AES.encrypt(message, keyHex, {
+                    mode: CryptoJS.mode.ECB,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+                return encrypted.toString();  // Devolver el texto cifrado en base64
+            }
             let btnIniciar = document.getElementById("btnIniciar");
             btnIniciar.addEventListener("click", function () {
                 let user = document.getElementById("user").value;
                 let pass = document.getElementById("pass").value;
 
-                let url = `logueocliente?user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`;
+                // Clave de encriptación (importante: no debe estar en el frontend, es solo un ejemplo)
+                let clave = "la fe de cuto123";  // Debe ser de 16, 24 o 32 caracteres
 
+                // Cifrar la contraseña antes de enviarla
+                let passCifrada = cifrar(pass, clave);
+
+                let url = `logueocliente?user=${encodeURIComponent(user)}&pass=${encodeURIComponent(passCifrada)}`;
+                console.log(passCifrada);
                 fetch(url)
                         .then(response => response.json())
                         .then(data => {
