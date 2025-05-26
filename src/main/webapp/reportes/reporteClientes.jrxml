@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2ab06500-022c-4152-a0cd-b7542e6bf7a1">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="33"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[select * from cliente]]>
+	</queryString>
+	<field name="codiClie" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ndniClie" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="appaClie" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="apmaClie" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombClie" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechNaciClie" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="logiClie" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="passClie" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="64" height="20" uuid="f4430881-62e5-4dfa-9227-201f7c7dcbab"/>
+				<text><![CDATA[codiClie]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="64" y="0" width="84" height="20" uuid="17ff2f3b-214c-427a-ab28-9043717fc4ee"/>
+				<text><![CDATA[ndniClie]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="148" y="0" width="86" height="20" uuid="64ab83e0-64e8-4058-b8fb-0e988708c354"/>
+				<text><![CDATA[appaClie]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="234" y="0" width="85" height="20" uuid="ad929da1-c0b8-4edd-b18e-08b3cdfffc65"/>
+				<text><![CDATA[apmaClie]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="319" y="0" width="83" height="20" uuid="9c09dffe-7835-4d45-89fd-7a93327cb648"/>
+				<text><![CDATA[nombClie]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="0" width="80" height="20" uuid="420a9407-8f2e-4050-9f88-3690a5cc4881"/>
+				<text><![CDATA[fechNaciClie]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="482" y="0" width="73" height="20" uuid="65d3aad2-2518-44eb-924e-90d5bf061769"/>
+				<text><![CDATA[logiClie]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="555" y="0" width="247" height="20" uuid="b636f673-4f0b-4274-bb11-b42e5a253dfc"/>
+				<text><![CDATA[passClie]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="64" height="20" uuid="62587965-92db-4a25-bee1-f1569f667b8f"/>
+				<textFieldExpression><![CDATA[$F{codiClie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="64" y="0" width="84" height="20" uuid="0054180b-0a5e-44fd-b7e6-72ac833feffb"/>
+				<textFieldExpression><![CDATA[$F{ndniClie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="148" y="0" width="86" height="20" uuid="dadc0ea0-7a88-4127-85ad-aa289a6d85c2"/>
+				<textFieldExpression><![CDATA[$F{appaClie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="234" y="0" width="85" height="20" uuid="cf30c8aa-efbd-45b4-89b6-31020db70e13"/>
+				<textFieldExpression><![CDATA[$F{apmaClie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="319" y="0" width="83" height="20" uuid="2f0f5884-8614-4706-a10b-cfb438b74406"/>
+				<textFieldExpression><![CDATA[$F{nombClie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="402" y="0" width="80" height="20" uuid="d401eb14-5c97-43a5-bf5a-8e4f99ec61ce"/>
+				<textFieldExpression><![CDATA[$F{fechNaciClie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="482" y="0" width="73" height="20" uuid="1166b730-b282-4891-b45a-0dcca512708c"/>
+				<textFieldExpression><![CDATA[$F{logiClie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="555" y="0" width="247" height="20" uuid="4b176435-a117-4e43-9aab-cc740e3b6cd6"/>
+				<textFieldExpression><![CDATA[$F{passClie}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

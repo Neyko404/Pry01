@@ -15,6 +15,28 @@
     </properties>
     
     <dependencies>
+        <!-- empezamos para ireport -->
+        <!-- JasperReports -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>6.17.0</version>
+        </dependency>
+
+        <!-- iText para JasperReports -->
+        <dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>2.1.7</version>
+        </dependency>
+
+        <!-- Groovy para scripts en JasperReports -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.4.3</version>
+        </dependency>
+        <!-- hasta aqui para ireport -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>

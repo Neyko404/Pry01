@@ -4,6 +4,7 @@
  */
 package servlet;
 
+import java.text.SimpleDateFormat;
 import dto.Cliente;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -44,6 +45,7 @@ public class ListClientes extends HttpServlet {
         String token = request.getParameter("token"); // token desde la URL: ?token=xxx
         boolean b = util.JwtUtil.validarToken(token);
         EntityManager em = emf.createEntityManager();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         if (b) {
             List<Cliente> clientes = em.createNamedQuery("Cliente.findAll", Cliente.class).getResultList();
@@ -55,7 +57,7 @@ public class ListClientes extends HttpServlet {
                 obj.put("appaClie", c.getAppaClie());
                 obj.put("apmaClie", c.getApmaClie());
                 obj.put("nombClie", c.getNombClie());
-                obj.put("fechNaciClie", c.getFechNaciClie() != null ? c.getFechNaciClie().toString() : "");
+                obj.put("fechNaciClie", c.getFechNaciClie() != null ? sdf.format(c.getFechNaciClie()) : "");
                 obj.put("logiClie", c.getLogiClie());
                 obj.put("passClie", c.getPassClie());
                 jsonArray.put(obj);
