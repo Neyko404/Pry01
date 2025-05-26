@@ -240,7 +240,27 @@
                         })
                         .catch(err => console.error(err));
             }
+            
+            function handleCredentialResponse(response) {
+                const id_token = response.credential;
 
+                fetch(`logueogoogle`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({id_token})
+                })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.resultado === 'ok') {
+                                setCookie("token", data.token, 7);
+                                window.location.href = './dist/pages/principal.html';
+                            } else {
+                                alert('Error en login con Google');
+                            }
+                        })
+                        .catch(err => console.error(err));
+            }
+            
             function setCookie(nombre, valor, dias) {
                 const fecha = new Date();
                 fecha.setTime(fecha.getTime() + (dias * 24 * 60 * 60 * 1000));
