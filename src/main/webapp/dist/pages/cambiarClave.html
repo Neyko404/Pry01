@@ -1092,7 +1092,7 @@
                             .then(response => response.text())
                             .then(respuesta => {
                                 if (respuesta.trim() === "ok") {
-                                    mensajeDiv.innerHTML = `<div class="alert alert-success">Contraseña actualizada con exito. Redirigiendo...</div>`;
+                                    mensajeDiv.innerHTML = `<div class="alert alert-success">ContraseÃ±a actualizada con exito. Redirigiendo...</div>`;
                                     setTimeout(() => {
                                         window.location.href = "../../index.html";
                                     }, 2000);
@@ -1128,7 +1128,7 @@
                 console.log("Token obtenido de cookie:", token); // Debug
 
                 if (!token) {
-                    console.warn("No se encontró token en cookie");
+                    console.warn("No se encontrÃ³ token en cookie");
                     return;
                 }
 
@@ -1154,8 +1154,19 @@
                                 document.getElementById("usuarioNombreDetalle").textContent = "Error al cargar usuario";
                             });
                 } else {
-                    console.warn("Token inválido o sin 'sub'");
+                    console.warn("Token invÃ¡lido o sin 'sub'");
                 }
+            });
+            
+            //script cerrar sesion:
+            document.getElementById("logoutBtn").addEventListener("click", function (e) {
+                e.preventDefault(); // Evita que el enlace recargue la página
+
+                // Borrar la cookie 'token'
+                document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                // Redirigir a la página de login
+                window.location.href = "../../index.html"; // Cambia esto si tu login tiene otro nombre
             });
         </script>
         <!--end::Script-->

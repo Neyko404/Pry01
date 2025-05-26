@@ -60,6 +60,14 @@
             />
         <!-- script pal sha512 -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.2.0/sha512.min.js"></script>
+        <!-- para la contrase;a -->
+        <style>
+            .col-password {
+                word-break: break-all;
+                white-space: normal;
+                max-width: 200px; /* o lo que quieras */
+            }
+        </style>
 
     </head>
     <!--end::Head-->
@@ -1070,7 +1078,7 @@
                                                 <td>${cliente.nombClie}</td>
                                                 <td>${cliente.fechNaciClie}</td>
                                                 <td>${cliente.logiClie}</td>
-                                                <td>${cliente.passClie}</td>
+                                                <td class="col-password">${cliente.passClie}</td>
                                             `;
                                 tbody.appendChild(fila);
                             });
@@ -1157,6 +1165,17 @@
                     return;
                 }
                 window.open(`reporteClientes.jsp?token=${token}`, "_blank");
+            });
+
+            //script cerrar sesion:
+            document.getElementById("logoutBtn").addEventListener("click", function (e) {
+                e.preventDefault(); // Evita que el enlace recargue la página
+
+                // Borrar la cookie 'token'
+                document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                // Redirigir a la página de login
+                window.location.href = "../../index.html"; // Cambia esto si tu login tiene otro nombre
             });
         </script>
         <!--end::Script-->
